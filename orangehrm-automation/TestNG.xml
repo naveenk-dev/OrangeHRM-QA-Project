@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<suite name="OrangeHRM Suite">
+
+    <test name="TC_Login_001_ValidLogin">
+        <classes>
+            <class name="orangehrm.testcases.LoginTest">
+                <methods>
+                    <include name="verifyLoginWithValidCredentials"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="TC_Login_002_InvalidUsername">
+        <classes>
+            <class name="orangehrm.testcases.LoginTest">
+                <methods>
+                    <include name="verifyLoginWithInvalidUsername"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    
+    <test name = "TC_Login_003_InvalidPassword">
+    	<classes>
+    		<class name="orangehrm.testcases.LoginTest">
+    			<methods>
+    				<include name="verifyLoginWithInvalidPassword"/>
+    			</methods>
+    		</class>
+    	</classes>
+    </test>
+    
+    <test name = "TC_Login_004_EmptyCredentials">
+    	<classes>
+    		<class name="orangehrm.testcases.LoginTest">
+    			<methods>
+    				<include name = "verifyLoginWithEmptyCredentials" />
+    			</methods>
+    		</class>
+    	</classes>
+    </test>
+    
+    <test name = "TC_Login_005_EmptyPassword">
+    	<classes>
+    		<class name="orangehrm.testcases.LoginTest">
+    			<methods>
+    				<include name = "verifyLoginWithEmptyPassword" />
+    			</methods>
+    		</class>
+    	</classes>
+    </test>
+    
+    <test name = "TC_Login_006_EmptyUsername">
+    	<classes>
+    		<class name="orangehrm.testcases.LoginTest">
+    			<methods>
+    				<include name = "verifyLoginWithEmptyUsername" />
+    			</methods>
+    		</class>
+    	</classes>
+    </test>
+    
+     <test name = "TC_Login_007_InvalidCredentials">
+    	<classes>
+    		<class name="orangehrm.testcases.LoginTest">
+    			<methods>
+    				<include name = "verifyErrorMessageForInvalidCredentials" />
+    			</methods>
+    		</class>
+    	</classes>
+    </test>
+    
+    <test name = "TC_Login_008_VerifyNavigation">
+    	<classes>
+    		<class name="orangehrm.testcases.LoginTest">
+    			<methods>
+    				<include name = "verifyNavigationAfterLogin" />
+    			</methods>
+    		</class>
+    	</classes>
+    </test>
+    
+    <test name = "TC_Login_009_VerifyLogout">
+    	<classes>
+    		<class name="orangehrm.testcases.LoginTest">
+    			<methods>
+    				<include name = "verifyLogoutFunctionality" />
+    			</methods>
+    		</class>
+    	</classes>
+    </test>
+    
+    <test name = "TC_Login_010_ForgotPassword">
+    	<classes>
+    		<class name="orangehrm.testcases.LoginTest">
+    			<methods>
+    				<include name = "verifyForgotPassword" />
+    			</methods>
+    		</class>
+    	</classes>
+    </test>
+
+</suite>

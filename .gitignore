@@ -23,3 +23,22 @@
 hs_err_pid*
 replay_pid*
 /.metadata/
+
+# =========================
+# QA Project Specific
+# =========================
+
+# MS Office temp files
+~$*.docx
+~$*.xlsx
+
+# TestNG reports
+test-output/
+
+# Maven build folder
+target/
+
+# IDE files
+.vscode/
+.idea/
+*.iml
