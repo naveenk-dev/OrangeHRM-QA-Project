@@ -25,24 +25,34 @@ public class BasePage
 
     public void type(By locator, String value)
     {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(locator)).sendKeys(value);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(locator))
+        .sendKeys(value);
     }
 
     public String getText(By locator)
     {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator)).getText();
+        return wait.until(ExpectedConditions
+        		.visibilityOfElementLocated(locator)).getText();
     }
 
     public boolean isDisplayed(By locator)
     {
         try
         {
-            return wait.until(ExpectedConditions.visibilityOfElementLocated(locator)).isDisplayed();
+            return wait
+            		.until(ExpectedConditions
+            		.visibilityOfElementLocated(locator))
+            		.isDisplayed();
         }
         catch (Exception e)
         {
             return false;
         }
+    }
+    
+    public boolean isElementPresent(By locator) 
+    {
+        return driver.findElements(locator).size() > 0;
     }
 
     public String getCurrentPageUrl()

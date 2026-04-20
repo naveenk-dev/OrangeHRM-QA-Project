@@ -1,6 +1,7 @@
 package orangehrm.testcases;
 
 import org.testng.Assert;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -8,9 +9,15 @@ import orangehrm.base.BaseClass;
 import orangehrm.pages.DashboardPage;
 import orangehrm.pages.LoginPage;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+
 public class LoginTest extends BaseClass
 {
 	private LoginPage lp;
+	private static final Logger logger = 
+			LogManager.getLogger(LoginTest.class);
 	
 	@BeforeMethod
 	public void setupPage()
@@ -18,10 +25,13 @@ public class LoginTest extends BaseClass
 		lp = new LoginPage(driver);
 	}
 
-    @Test
+	//=================VALID LOGIN=================
+    @Test(description = "Verify login with valid credentials") 
     public void verifyLoginWithValidCredentials()
-    {       
-        lp.login(
+    {   
+    	logger.info("Starting test: verifyLoginWithValidCredentials");
+        
+    	lp.login(
             config.getProperty("username"),
             config.getProperty("password")
         );
@@ -33,21 +43,24 @@ public class LoginTest extends BaseClass
             "login failed. Dashboard not displayed after login"
         );
         
-        System.out.println("login successful. user navigated to dashboard");
+        logger.info("Login successful. dashboard displayed");
         
         lp.logout();
     }
     
-    @Test
+    //=================INVALID USERNAME=================
+    @Test(description = "Verify login with invalid username")
     public void verifyLoginWithInvalidUsername()
     {
+    	logger.info("Starting test: verifyLoginWithInvalidUsername");
     	
-    	lp.login("wrongusername", config.getProperty("password"));
+    	lp.login(config.getProperty("invalid.username"), 
+    			config.getProperty("password"));
     	
-    	boolean isLoginSuccess = lp.isLoginSuccessful();
-        Assert.assertFalse(
-            isLoginSuccess, 
-            "Login should not succeed with invalid username");
+    	Assert.assertTrue(
+    		    lp.isLoginFailed(),
+    		    "Login should fail with invalid username"
+    		);
         
     	String actualErrorMessage = lp.getErrorMessageText();
     	
@@ -56,20 +69,23 @@ public class LoginTest extends BaseClass
     	        "Invalid credentials",
     	        "Error message mismatch for invalid username");	
     	
-    	System.out.println("Captured message: "+actualErrorMessage);
-    	System.out.println("error message displayed correctly "
-    			+ "for invalid username and valid password login");
+    	logger.info("Validation successful for invalid username. "
+    			+ "Message: {}", actualErrorMessage);
     }
     
-    @Test
+    //=================INVALID PASSWORD=================
+    @Test(description = "Verify login with invalid password")
     public void verifyLoginWithInvalidPassword()
     {
-    	lp.login(config.getProperty("username"), "wrongpassword");
+    	logger.info("Starting test: verifyLoginWithInvalidPassword");
     	
-    	boolean isLoginSuccess = lp.isLoginSuccessful();
+    	lp.login(config.getProperty("username"), 
+    			config.getProperty("invalid.password"));
     	
-    	Assert.assertFalse(isLoginSuccess, 
-    			"Login should not succeed with invalid password");
+    	Assert.assertTrue(
+    		    lp.isLoginFailed(),
+    		    "Login should fail with invalid password"
+    		);
     	
     	String actualErrorMessage = lp.getErrorMessageText();
     	
@@ -78,14 +94,16 @@ public class LoginTest extends BaseClass
     	        "Invalid credentials",
     	        "Error message mismatch for invalid password");
     	
-    	System.out.println("Captured message: "+actualErrorMessage);
-    	System.out.println("error message displayed correctly "
-    			+ "for valid useranme and invalid password login");  	
+    	logger.info("Validation successful for invalid password. "
+    			+ "Message: {}", actualErrorMessage);  	
     }
       
-    @Test
+    //================= BOTH EMPTY =================
+    @Test(description = "Verify login with empty credentials")
     public void verifyLoginWithEmptyCredentials()
-    {   	
+    {   
+    	logger.info("Starting test: verifyLoginWithEmptyCredentials");
+    	
     	lp.login("", "");
     	
     	String actualUsernameError = lp.getUsernameRequiredMessage();
@@ -100,13 +118,14 @@ public class LoginTest extends BaseClass
     	System.out.println("Captured  username error: "+actualUsernameError);
     	System.out.println("Captured  password error: "+actualPasswordError);
     	
-    	System.out.println("required field validation working correctly for both fields");
+    	logger.info("Validation successful for empty credentials");
     }
     
-    @Test
+    //================= EMPTY PASSWORD =================
+    @Test(description = "Verify login with empty password")
     public void verifyLoginWithEmptyPassword()
     {
-    	
+    	logger.info("Starting test: verifyLoginWithEmptyPassword");
     	
     	lp.login(config.getProperty("username"), "");
     	
@@ -116,14 +135,14 @@ public class LoginTest extends BaseClass
     			"password required message is incorrect");
     	
     	System.out.println("Captured  password error: "+actualPasswordError);
-    	System.out.println("required field validation "
-    			+ "working correctly for empty password");
+    	logger.info("Validation successful for empty password");
     }
     
-    @Test
+    //================= EMPTY USERNAME =================
+    @Test(description = "Verify login with empty username")
     public void verifyLoginWithEmptyUsername()
     {    	
-    	
+    	logger.info("Starting test: verifyLoginWithEmptyUsername");
     	lp.login("", config.getProperty("password"));
     	
     	String actualUsernameError = lp.getUsernameRequiredMessage();
@@ -132,20 +151,22 @@ public class LoginTest extends BaseClass
     			"username required message is incorrect");
    	
     	System.out.println("Captured username error: "+actualUsernameError);
-    	System.out.println("required field validation "
-    			+ "working correctly for empty username");
+    	logger.info("Validation successful for empty username");
     }
     
-    @Test
+    //================= INVALID BOTH =================
+    @Test(description = "Verify error message for invalid credentials")
     public void verifyErrorMessageForInvalidCredentials()
     {   	
+    	logger.info("Starting test: verifyErrorMessageForInvalidCredentials");
     	
-    	lp.login("wrongusername", "wrongpassword");
+    	lp.login(config.getProperty("invalid.username"), 
+    			config.getProperty("invalid.password"));
     	
-    	boolean isLoginSuccess = lp.isLoginSuccessful();
-    	
-    	Assert.assertFalse(isLoginSuccess, 
-    			"Login should not succeed with invalid credentials");
+    	Assert.assertTrue(
+    		    lp.isLoginFailed(),
+    		    "Login should fail with invalid credentials"
+    		);
     	
     	String actualErrorMessage = lp.getErrorMessageText();
     	
@@ -154,14 +175,15 @@ public class LoginTest extends BaseClass
     	        "Invalid credentials",
     	        "Error message mismatch for invalid credentials login");	
     	
-    	System.out.println("Captured message: "+actualErrorMessage);
-    	System.out.println("error message displayed correctly for "
-    			+ "invalid credentials login");   	
+    	logger.info("Validation successful for invalid credentials. "
+    			+ "Message: {}", actualErrorMessage);  	
     }
 
-        @Test
+    	//================= NAVIGATION =================
+    	@Test(description = "Verify navigation after successful login")
         public void verifyNavigationAfterLogin() 
         {
+    		logger.info("Starting test: verifyNavigationAfterLogin");
             DashboardPage dp = new DashboardPage(driver);
             
             lp.login(config.getProperty("username"),
@@ -174,12 +196,15 @@ public class LoginTest extends BaseClass
             String currentURL = dp.getCurrentPageUrl();
             Assert.assertTrue(currentURL.contains("dashboard"),
                     "URL does not contain dashboard");
-            System.out.println("Dashboard page displayed after successful login");
+            logger.info("Navigation successful-User redirected to dashboard");
         }
     
-    @Test
+    //================= LOGOUT =================
+    @Test(description = "Verify logout functionality")
     public void verifyLogoutFunctionality()
     {
+    	logger.info("Starting test: verifyLogoutFunctionality");
+    	
         lp.login(
             config.getProperty("username"),
             config.getProperty("password")
@@ -192,7 +217,7 @@ public class LoginTest extends BaseClass
             "login failed. dashboard not displayed after login"
         );
         
-        System.out.println("login successful. user navigated to dashboard");
+        logger.info("login successful. user navigated to dashboard");
         
         lp.logout();
         
@@ -203,24 +228,29 @@ public class LoginTest extends BaseClass
                 "Logout failed... Login page not displayed after logout"
             );
 
-            System.out.println("Logout successful. user redirected to login page");
+        logger.info("Logout successful - User redirected to login page");
     }
     
-    @Test
+    //================= FORGOT PASSWORD =================
+    @Test(description = "Verify forgot password page navigation")
     public void verifyForgotPassword()
     {
+    	logger.info("Starting test: verifyForgotPassword");
         lp.clickForgotPassword();
 
         Assert.assertTrue(
         		lp.isResetPasswordPageDisplayed(), 
             "forgot password link is not working");
         
-        lp.resetPassword(config.getProperty("username"));
+        lp.resetPassword(config.getProperty("invalid.username"));
         
         Assert.assertTrue(lp.isResetPasswordSuccessful(), 
         		"Reset password is not successful");
         
-        System.out.println("forgot Password link is working correctly "
-        		+ "and reset password mail send successfully");
+        logger.info(
+        	    "Forgot password page displayed successfully "
+        	    + "(Demo application limitation: "
+        	    + "reset password functionality not working "
+        	    + "for username: {})", config.getProperty("username"));
     }
 }
